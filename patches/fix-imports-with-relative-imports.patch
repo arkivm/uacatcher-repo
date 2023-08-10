@@ -1,0 +1,122 @@
+From 04d5c5e3fbeb6f1b2b24f8f95fdb6bcd66b59ee6 Mon Sep 17 00:00:00 2001
+From: Alexander Mueller <XelaRellum@web.de>
+Date: Mon, 6 Feb 2017 11:16:36 +0100
+Subject: [PATCH] import packages relative to pymake
+
+A relative import like 'import data' will become to 'from . import data'
+---
+ pymake/command.py      | 2 +-
+ pymake/data.py         | 4 ++--
+ pymake/functions.py    | 6 +++---
+ pymake/globrelative.py | 2 +-
+ pymake/parser.py       | 2 +-
+ pymake/parserdata.py   | 2 +-
+ pymake/process.py      | 4 ++--
+ 7 files changed, 11 insertions(+), 11 deletions(-)
+
+diff --git a/pymake/command.py b/pymake/command.py
+index eb999b1..5ceca08 100644
+--- a/pymake/command.py
++++ b/pymake/command.py
+@@ -11,7 +11,7 @@
+ 
+ import os, subprocess, sys, logging, time, traceback, re
+ from optparse import OptionParser
+-import data, parserdata, process, util
++from . import data, parserdata, process, util
+ from pymake import errors
+ 
+ # TODO: If this ever goes from relocatable package to system-installed, this may need to be
+diff --git a/pymake/data.py b/pymake/data.py
+index a076ac0..305f8d3 100644
+--- a/pymake/data.py
++++ b/pymake/data.py
+@@ -4,8 +4,8 @@
+ 
+ import logging, re, os, sys
+ from functools import reduce
+-import parserdata, parser, functions, process, util, implicit
+-import globrelative
++from . import parserdata, parser, functions, process, util, implicit
++from . import globrelative
+ from pymake import errors
+ 
+ try:
+diff --git a/pymake/functions.py b/pymake/functions.py
+index 54120e6..37f3895 100644
+--- a/pymake/functions.py
++++ b/pymake/functions.py
+@@ -3,9 +3,9 @@
+ """
+ from __future__ import print_function
+ 
+-import parser, util
++from . import parser, util
+ import subprocess, os, logging, sys
+-from globrelative import glob
++from .globrelative import glob
+ from pymake import errors
+ 
+ log = logging.getLogger('pymake.data')
+@@ -871,4 +871,4 @@ def resolve(self, makefile, variables, fd, setting):
+     'info': InfoFunction,
+ }
+ 
+-import data
++from . import data
+diff --git a/pymake/globrelative.py b/pymake/globrelative.py
+index 64311ae..61ef0b3 100644
+--- a/pymake/globrelative.py
++++ b/pymake/globrelative.py
+@@ -7,7 +7,7 @@
+ """
+ 
+ import os, re, fnmatch
+-import util
++from . import util
+ 
+ _globcheck = re.compile('[[*?]')
+ 
+diff --git a/pymake/parser.py b/pymake/parser.py
+index 7118a0b..d6ee6a1 100644
+--- a/pymake/parser.py
++++ b/pymake/parser.py
+@@ -34,7 +34,7 @@
+ """
+ 
+ import logging, re, os, sys
+-import data, functions, util, parserdata
++from . import data, functions, util, parserdata
+ from pymake import errors
+ 
+ _log = logging.getLogger('pymake.parser')
+diff --git a/pymake/parserdata.py b/pymake/parserdata.py
+index 833b06e..a464c96 100644
+--- a/pymake/parserdata.py
++++ b/pymake/parserdata.py
+@@ -1,7 +1,7 @@
+ from __future__ import print_function
+ 
+ import logging, re, os
+-import data, parser, util
++from . import data, parser, util
+ from pymake.globrelative import hasglob, glob
+ from pymake import errors
+ 
+diff --git a/pymake/process.py b/pymake/process.py
+index 2110bca..0c3938d 100644
+--- a/pymake/process.py
++++ b/pymake/process.py
+@@ -11,10 +11,10 @@
+ from collections import deque
+ # XXXkhuey Work around http://bugs.python.org/issue1731717
+ subprocess._cleanup = lambda: None
+-import command, util
++from . import command, util
+ from pymake import errors
+ if sys.platform=='win32':
+-    import win32process
++    from . import win32process
+ 
+ _log = logging.getLogger('pymake.process')
+ 
